@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken"
 import { Auth } from "../models/auth.model.js"
 
 const registerUser = async (req, res) => {
+    console.log("hello11")
+
     try {
 
         //get user details from frontend
@@ -28,6 +30,7 @@ const registerUser = async (req, res) => {
                 message: "User already exists"
             })
         }
+        console.log(password, 33)
 
         //hash password
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -36,7 +39,7 @@ const registerUser = async (req, res) => {
 
         //create new user
 
-        const newUser = new User({
+        const newUser = new Auth({
             username,
             email,
             password: hashedPassword
@@ -45,7 +48,7 @@ const registerUser = async (req, res) => {
         await newUser.save()
 
 
-        if (!createdUser) {
+        if (!newUser) {
             return res.status(500).json({
                 status: 'error',
                 message: "something went wrong while registering the user"
@@ -56,7 +59,7 @@ const registerUser = async (req, res) => {
         return res.json({
             status: "success",
             message: "User Registered successfully",
-            createdUser
+            newUser
         })
     } catch (error) {
         console.log(error)

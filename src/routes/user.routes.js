@@ -5,8 +5,8 @@ import { verifyJWT } from "../middlewares/verifyUser.middlewares.js"
 const router = Router()
 
 router.post("/register", validate, registerUser)
-router.post("/login", validate, loginUser)
-router.post("/getAllUsers", validate, verifyJWT, getAllUser)
+router.post("/login", loginUser)
+router.get("/getAllUsers", verifyJWT, getAllUser)
 
 
 
