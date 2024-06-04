@@ -1,33 +1,21 @@
 import mongoose from "mongoose";
-import Joi from "joi";
 
 
-// const authSchema = new mongoose.Schema({
+const authSchema = new mongoose.Schema({
 
-//     const joiSchema Joi.object({
+    username: String,
+    email: String,
+    password: String,
 
-//     })
-// },
-//     {
+},
+    {
 
-//         timestamps: true
-//     }
-
-// )
-
-const schema = Joi.object({
-    username: Joi.string().required(true, 'Please provide name').lowercase().trim(),
-
-    email: Joi.string().required([true, 'Please provide name']).lowercase().trim(),
-
-    password: Joi.string().required(true, 'Please provide name')
-
-})
+        timestamps: true
+    }
+)
 
 
 
-
-
-export const Auth = mongoose.model("Auth", schema)
+export const Auth = mongoose.model("Auth", authSchema)
 
 
