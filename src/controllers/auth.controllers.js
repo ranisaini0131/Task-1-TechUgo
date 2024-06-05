@@ -165,10 +165,107 @@ const getAllUser = async (req, res) => {
     }
 }
 
+
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const updatedUser = await Auth.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true }
+        )
+
+
+        return res
+            .status(200)
+            .json({
+                status: "success",
+                data: updatedUser
+            })
+
+    } catch (error) {
+
+        return res
+            .status(500)
+            .json({
+                status: "failed",
+                error: error.message
+            })
+    }
+
+
+
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const product = await Auth.findByIdAndDelete(id)
+
+        return res
+            .status(200)
+            .json({
+                status: "success",
+                deletedProduct: product
+            })
+
+
+    } catch (error) {
+        return res
+            .status(500)
+            .json({
+                status: "failed",
+                message: "product not deleted"
+            })
+    }
+}
+
+
+const resetPassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+
+        const nUser = await Auth.findOneAndUpdate(
+            { email },
+            {
+                $set: {
+                    password: hashedPassword
+                }
+            },
+            {
+                new: true
+            }
+
+        ).select(
+            "-password"
+        )
+
+        return res
+            .status(200)
+            .json({
+                status: 'success',
+                message: "Password changed successfully",
+                nUser
+            })
+
+    } catch (error) {
+
+    }
+
+}
+
 export {
     registerUser,
     loginUser,
-    getAllUser
+    getAllUser,
+    updateUser,
+    deleteUser,
+    resetPassword
 }
 
 
