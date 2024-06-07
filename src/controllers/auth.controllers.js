@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { Auth } from "../models/auth.model.js"
+import { sendMail } from "../utility/nodemailer.utility.js"
 
 const registerUser = async (req, res) => {
     console.log("hello11")
@@ -223,41 +224,113 @@ const deleteUser = async (req, res) => {
 }
 
 
-const resetPassword = async (req, res) => {
+// const resetPassword = async (req, res) => {
+//     try {
+//         const { new_password, password } = req.body;
+
+//         if ()
+
+//             const nUser = await Auth.findOneAndUpdate(
+//                 { email },
+//                 {
+//                     $set: {
+//                         password: hashedPassword
+//                     }
+//                 },
+//                 {
+//                     new: true
+//                 }
+
+//             ).select(
+//                 "-password"
+//             )
+
+//         return res
+//             .status(200)
+//             .json({
+//                 status: 'success',
+//                 message: "Password changed successfully",
+//                 nUser
+//             })
+
+//     } catch (error) {
+
+//     }
+
+// }
+
+const forgetPassword = async (req, res) => {
+
     try {
-        const { password } = req.body;
+        const { email } = req.body
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+        if (email) {
+
+            //username, email exists or not
+            const existUser = await Auth.findOne({ email })
 
 
-        const nUser = await Auth.findOneAndUpdate(
-            { email },
-            {
-                $set: {
-                    password: hashedPassword
+            if (existUser) {
+
+                //generate OTP
+                const generateOTP = () => {
+                    return Math.floor(1000 + Math.random() * 9000).toString()
                 }
-            },
-            {
-                new: true
+                existUser.otp = generateOTP()
+                const userOtp = existUser.otp
+                console.log(userOtp)
+
+                //save into user model
+                const user = await Auth.findOneAndUpdate({ email }, { $set: { otp: userOtp } }, { new: true })
+
+                console.log(user, "223")
+
+                //config sendMail args
+                const subject = "Task-1 OTP"
+                const html = `Your One Time Password is ${userOtp}`
+
+                // /this method send email
+                const response = await sendMail({
+                    to: email,
+                    subject,
+                    html
+                });
+
+                console.log(response, "300")
+
+                return res.status(200).json({
+                    status: "success",
+                    message: `OTP send Successfully to ${existUser.email}`,
+
+                })
+
+            } else {
+                return res.status(422).json({
+                    status: "fail",
+                    message: "Wrong Email or username",
+                    error: error.message
+                })
             }
 
-        ).select(
-            "-password"
-        )
 
-        return res
-            .status(200)
-            .json({
-                status: 'success',
-                message: "Password changed successfully",
-                nUser
+        }
+        else {
+            return res.status(422).json({
+                status: "fail",
+                message: "Please provide username or email",
+                error: error.message
             })
+        }
 
     } catch (error) {
-
+        console.log("ERROR: ", error)
+        Auth.otp = undefined,
+            Auth.otpExpire = undefined
     }
 
+
 }
+
 
 export {
     registerUser,
@@ -265,7 +338,7 @@ export {
     getAllUser,
     updateUser,
     deleteUser,
-    resetPassword
+    forgetPassword
 }
 
 

@@ -6,6 +6,11 @@ const authSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
+    otp: {
+        type: Number
+    },
+
+    otpExpire: Date
 
 },
     {
@@ -13,6 +18,8 @@ const authSchema = new mongoose.Schema({
         timestamps: true
     }
 )
+
+authSchema.method.otpExpire = Date.now() + 2 * 60 * 1000; //2 min expiration time
 
 
 
