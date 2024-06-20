@@ -10,7 +10,15 @@ const authSchema = new mongoose.Schema({
         type: Number
     },
 
-    otpExpire: Date
+    otpExpire: Date,
+
+    avatar: {
+        type: String,
+    },
+
+    coverImage: {
+        type: String,
+    },
 
 },
     {

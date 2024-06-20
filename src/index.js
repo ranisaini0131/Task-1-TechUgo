@@ -7,6 +7,10 @@ dotenv.config({
     path: "./.env"
 })
 
+// const server = new http
+
+// let server = require('http').Server(app);
+
 
 //connectDb returns a promise so,
 connectDb()

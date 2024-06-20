@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import pdf from "html-pdf"
+import axios from "axios"
 import { Auth } from "../models/auth.model.js"
 import { sendMail } from "../utility/nodemailer.utility.js"
 
@@ -332,13 +334,64 @@ const forgetPassword = async (req, res) => {
 }
 
 
+const htmlToPdf = async (req, res) => {
+
+
+    async function generatePDFfromURL(url, outputPath) {
+        try {
+            const response = await axios.get(url);
+            const htmlContent = response.data;
+            pdf.create(htmlContent).toFile(outputPath, (err, res) => {
+                if (err) return console.log(err);
+                console.log('PDF generated successfully:', res);
+            });
+
+
+            return res.status(200).json({
+                status: "success",
+                message: `PDF generated successfully:`,
+
+            })
+
+
+        } catch (error) {
+            console.error('Error fetching URL:', error);
+        }
+    }
+
+    // Usage
+    generatePDFfromURL('https://google.com', 'google.pdf');
+
+
+}
+const excelImportExport = async (req, res) => {
+
+    console.log("helllooooo336")
+    // Load the workbook
+    const workbook = xlsx.readFile('https://d.docs.live.net/c6f8e6e0b6d3c3c3/Documents/Traveler__Insurance.xlsx');
+
+    // Choose a sheet to work with
+    const sheetName = workbook.SheetNames[0]; // Get the first sheet name
+    const worksheet = workbook.Sheets[sheetName];
+
+    // Convert the sheet to JSON
+    const data = xlsx.utils.sheet_to_json(worksheet);
+
+    // Output the data
+    console.log(data);
+
+}
+
+
 export {
     registerUser,
     loginUser,
     getAllUser,
     updateUser,
     deleteUser,
-    forgetPassword
+    forgetPassword,
+    htmlToPdf,
+    excelImportExport
 }
 
 

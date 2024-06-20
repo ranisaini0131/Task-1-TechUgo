@@ -1,15 +1,30 @@
 import { Router } from "express"
-import { deleteUser, forgetPassword, getAllUser, loginUser, registerUser, updateUser } from "../controllers/auth.controllers.js"
-import { validate } from "../middlewares/apiValidation.middlewares.js"
+import { deleteUser, excelImportExport, forgetPassword, getAllUser, htmlToPdf, loginUser, registerUser, updateUser } from "../controllers/auth.controllers.js"
+import { uploads } from "../middlewares/multer.middlewares.js"
 import { verifyJWT } from "../middlewares/verifyUser.middlewares.js"
 const router = Router()
 
-router.post("/register", validate, registerUser)
+router.post("/register",
+
+    uploads.fields([
+        {
+            name: "avatar",
+            maxCount: 1
+        },
+        {
+            name: "coverImage",
+            maxCount: 1
+        }
+    ]),
+
+    registerUser)
 router.post("/login", loginUser)
 router.get("/getAllUsers", verifyJWT, getAllUser)
 router.patch("/updateUser/:id", verifyJWT, updateUser)
 router.delete("/deleteUser/:id", verifyJWT, deleteUser)
 router.patch("/forgotPassword", verifyJWT, forgetPassword)
+router.get("/excelData", excelImportExport)
+router.get("/htmlToPdf", htmlToPdf)
 
 
 
