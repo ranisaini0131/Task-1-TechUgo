@@ -23,9 +23,9 @@ router.get("/getAllUsers", verifyJWT, getAllUser)
 router.patch("/updateUser/:id", verifyJWT, updateUser)
 router.delete("/deleteUser/:id", verifyJWT, deleteUser)
 router.patch("/forgotPassword", verifyJWT, forgetPassword)
-router.get("/excelData", excelImportExport)
+router.get("/excelData", uploads.single("file"), excelImportExport)
 router.get("/htmlToPdf", htmlToPdf)
-
+0
 
 
 

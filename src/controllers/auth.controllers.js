@@ -2,6 +2,8 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import pdf from "html-pdf"
 import axios from "axios"
+import XLSX from 'xlsx';
+import connectDb from "../db/index.db.js";
 import { Auth } from "../models/auth.model.js"
 import { sendMail } from "../utility/nodemailer.utility.js"
 
@@ -366,20 +368,45 @@ const htmlToPdf = async (req, res) => {
 }
 const excelImportExport = async (req, res) => {
 
-    console.log("helllooooo336")
-    // Load the workbook
-    const workbook = xlsx.readFile('https://d.docs.live.net/c6f8e6e0b6d3c3c3/Documents/Traveler__Insurance.xlsx');
+    try {
+        const importWorkbook = XLSX.readFile("public/temp/student_profile.ods");
 
-    // Choose a sheet to work with
-    const sheetName = workbook.SheetNames[0]; // Get the first sheet name
-    const worksheet = workbook.Sheets[sheetName];
+        // Get the first sheet from the workbook
+        // const sheetName = importWorkbook.SheetNames[0];
+        const importWorksheet = importWorkbook.Sheets["student_profile"];
 
-    // Convert the sheet to JSON
-    const data = xlsx.utils.sheet_to_json(worksheet);
+        // Convert the worksheet to JSON
+        const importData = XLSX.utils.sheet_to_json(importWorksheet, { header: 1 });
 
-    // Output the data
-    console.log(data);
+        console.log("Data imported from Excel:", importData, "381");
 
+        // //insert data to database
+        // // const db = .db(dbName);
+        // const collection = connectDb.collection(Auth);
+
+        // // Insert the data into the collection
+        // const result = await collection.insertMany(importData);
+        // console.log(result, "389")
+
+
+        // /create new user
+
+        const newUser = new Auth([importData])
+        await newUser.save()
+        console.log(newUser, "saved")
+
+        ////work on 20 data
+        //loop on importdata to check entry
+
+        return res.json({
+            status: "success",
+            message: "data saved to database successfully",
+            newUser
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
@@ -394,4 +421,28 @@ export {
     excelImportExport
 }
 
+
+
+
+// //export
+
+// // Sample data to be written to Excel
+// const data = [
+//     ["Name", "Age", "Email"],
+//     ["John Doe", 28, "john.doe@example.com"],
+//     ["Jane Smith", 34, "jane.smith@example.com"],
+//     ["Sam Brown", 22, "sam.brown@example.com"]
+// ];
+
+// // Convert the data to a worksheet
+// const worksheet = XLSX.utils.aoa_to_sheet(data);
+
+// // Create a new workbook and add the worksheet to it
+// const workbook = XLSX.utils.book_new();
+// XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+// // Write the workbook to a file
+// XLSX.writeFile(workbook, "output.xlsx");
+
+// console.log("Excel file created: output.xlsx");
 

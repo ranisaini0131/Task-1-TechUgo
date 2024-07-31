@@ -1,0 +1,31 @@
+[{
+  "_id": {
+    "$oid": "665ef7e108fa9754b08d6fe8"
+  },
+  "username": "rakhi suman",
+  "email": "rakhi67123@gmail.com",
+  "password": "$2b$10$Cxkvk0QwiRLCzV.bSoeB7O5oJvkUTbxish0bnZnvaic1DAYT8Bef6",
+  "createdAt": {
+    "$date": "2024-06-04T11:17:53.046Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-04T11:17:53.046Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "665ef816ca455a5e40ac6c9f"
+  },
+  "username": "raksha delewan",
+  "email": "raksha7123@gmail.com",
+  "password": "$2b$10$sS.azR0UieXNw4wJLVZjM./3fmlp5j6hQXA04qsQsggevoUYpaCwq",
+  "createdAt": {
+    "$date": "2024-06-04T11:18:46.437Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-07T09:17:38.668Z"
+  },
+  "__v": 0,
+  "otp": 5756
+}]
